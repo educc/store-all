@@ -1,0 +1,52 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'idea'
+    id 'com.github.johnrengelman.shadow' version '1.2.3'
+    id 'net.ltgt.apt' version '0.10'
+}
+
+ext {
+  vertxVersion = '3.5.2'
+}
+
+repositories {
+    mavenCentral()
+}
+
+version = '1.0-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok:1.16.20'
+    apt "org.projectlombok:lombok:1.16.20"
+    testCompile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
+
+    compile 'org.slf4j:slf4j-api:1.7.25'
+    compile "io.vertx:vertx-core:$vertxVersion"
+    compile "io.vertx:vertx-web:$vertxVersion"
+}
+
+mainClassName = 'io.vertx.core.Launcher'
+def mainVerticleName = 'com.ecacho.storeall.StoreAllVerticle'
+def watchForChange = 'src/**/*'
+def doOnChange = './gradlew classes'
+
+shadowJar {
+    classifier = 'fat'
+    manifest {
+        attributes "Main-Verticle": mainVerticleName
+    }
+    mergeServiceFiles {
+        include 'META-INF/services/io.vertx.core.spi.VerticleFactory'
+    }
+}
+
+run {
+    //args = ['run', mainVerticleName, "--redeploy=$watchForChange", "--launcher-class=$mainClassName", "--on-redeploy=$doOnChange"]
+    args = ['run', mainVerticleName, "--launcher-class=$mainClassName"]
+}
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '4.0'
+}
