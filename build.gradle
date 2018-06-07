@@ -25,6 +25,8 @@ dependencies {
     compile 'org.slf4j:slf4j-api:1.7.25'
     compile "io.vertx:vertx-core:$vertxVersion"
     compile "io.vertx:vertx-web:$vertxVersion"
+    compile "io.vertx:vertx-config:$vertxVersion"
+    compile "io.vertx:vertx-web-templ-freemarker:$vertxVersion"
 }
 
 mainClassName = 'io.vertx.core.Launcher'
